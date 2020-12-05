@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +38,67 @@ public class RosterCreator {
     }
 
     public DutyRoster generateRoster(){
+        // separateSeniorJuniors separates officers, add to rotation and then sort them
         List<Officer>[] separated = separateSeniorJuniors();
 
         List<Officer> senior = separated[0];
         List<Officer> junior = separated[1];
 
+        // assign duties to senior officers
+
+        assignSeniorDuties(senior);
+
         // assign duties to junior officers
+
+        assignJuniorDuties(junior);
+
+        return dutyRoster;
+    }
+
+    private List<Officer>[] separateSeniorJuniors(){
+        List<Officer> seniors = new ArrayList<>();
+        List<Officer> juniors = new ArrayList<>();
+        // separate senior and junior officers
+        for (Officer officer:
+                officers
+             ) {
+            if(officer.getType() == OfficerType.Senior){
+                seniors.add(officer);
+            }else if(officer.getType() == OfficerType.Junior){
+                juniors.add(officer);
+            }
+        }
+        // add two seniors to Rotation before sorting them
+        dutyRoster.addToRotation(seniors.remove(0));
+        dutyRoster.addToRotation(seniors.remove(0));
+        sortOfficerList(seniors);
+        // add two juniors to Rotation before sorting
+        dutyRoster.addToRotation(juniors.remove(0));
+        dutyRoster.addToRotation(juniors.remove(0));
+        sortOfficerList(juniors);
+        List[] returning = {seniors,juniors};
+        return returning;
+    }
+
+    private void sortOfficerList(List<Officer> list){
+        int n = list.size();
+        for (int i = 1; i < n; ++i) {
+            Officer key = list.get(i);
+            int j = i - 1;
+
+            /* Move elements of arr[0..i-1], that are
+               greater than key, to one position ahead
+               of their current position */
+            while (j >= 0 && list.get(j).getQualityScore() < key.getQualityScore()) {
+                list.set(j + 1,  list.get(j));
+                j = j - 1;
+            }
+            list.set(j + 1, key);
+        }
+    }
+
+    private void assignSeniorDuties(@NotNull List<Officer> senior){
+        List<Officer> notAssigned = new ArrayList<>();
 
         while (senior.size()!=0){
             Officer officer = senior.remove(0);
@@ -66,8 +123,8 @@ public class RosterCreator {
                     break;
             }
             // now we will select duty preference and then set it
-            for (Duty duty:
-                    duties) {
+            for(int i=0; i<duties.length; i++) {
+                Duty duty = duties[i];
                 boolean isSet = false;
                 try{
                     switch (duty){
@@ -90,16 +147,23 @@ public class RosterCreator {
                     }
                 }catch (DutyFullException e){
                     System.out.println("Just to check if it is raising");
+                    if(i+1 == duties.length){
+                        // this officer's preferences are already filled
+                        notAssigned.add(officer);
+                    }
                 }
+
                 if (isSet){
+                    dutyRoster.addToAssigned(officer);
                     break;
                 }
             }
 
-            }
+        }
+    }
 
-        // assign duties to junior officers
-
+    private void assignJuniorDuties(@NotNull List<Officer> junior){
+        List<Officer> notAssigned = new ArrayList<>();
         while (junior.size()!=0){
             Officer officer = junior.remove(0);
             Shifts shift = officer.getShiftPreference();
@@ -122,80 +186,50 @@ public class RosterCreator {
                     break;
             }
             // now we will select duty preference and then set it
-            for (Duty duty:
-                 duties) {
+            for (int i=0; i<duties.length; i++) {
+                Duty duty = duties[i];
                 boolean isSet = false;
-                switch (duty){
-                    case Moherer:
-                        dutyShift.setMoherer(officer);
-                        isSet = true;
-                        break;
-                    case Security:
-                        dutyShift.setSecurity(officer);
-                        isSet = true;
-                        break;
-                    case Shaheen:
-                        dutyShift.setShaheen(officer);
-                        isSet = true;
-                        break;
-                    case WirelessOperator:
-                        dutyShift.setWirelessOperator(officer);
-                        isSet = true;
-                        break;
-                    case WeightStationSouth:
-                        dutyShift.setWeightStationSouth(officer);
-                        isSet = true;
-                        break;
-                    case WeightStationNorth:
-                        isSet = true;
-                        dutyShift.setWeightStationNorth(officer);
-                        break;
+                try{
+                    switch (duty){
+                        case Moherer:
+                            dutyShift.setMoherer(officer);
+                            isSet = true;
+                            break;
+                        case Security:
+                            dutyShift.setSecurity(officer);
+                            isSet = true;
+                            break;
+                        case Shaheen:
+                            dutyShift.setShaheen(officer);
+                            isSet = true;
+                            break;
+                        case WirelessOperator:
+                            dutyShift.setWirelessOperator(officer);
+                            isSet = true;
+                            break;
+                        case WeightStationSouth:
+                            dutyShift.setWeightStationSouth(officer);
+                            isSet = true;
+                            break;
+                        case WeightStationNorth:
+                            isSet = true;
+                            dutyShift.setWeightStationNorth(officer);
+                            break;
+                    }
+                }catch (Exception e){
+                    System.out.println("Junior duty me exception");
+                    if(i+1 == duties.length){
+                        // this officer's preferences are already filled
+                        notAssigned.add(officer);
+                    }
                 }
+
                 if (isSet){
+                    dutyRoster.addToAssigned(officer);
                     break;
                 }
+
             }
         }
-
-
-
-        return dutyRoster;
     }
-
-    private List<Officer>[] separateSeniorJuniors(){
-        List<Officer> seniors = new ArrayList<>();
-        List<Officer> juniors = new ArrayList<>();
-        // separate senior and junior officers
-        for (Officer officer:
-                officers
-             ) {
-            if(officer.getType() == OfficerType.Senior){
-                seniors.add(officer);
-            }else if(officer.getType() == OfficerType.Junior){
-                juniors.add(officer);
-            }
-        }
-        sortOfficerList(seniors);
-        sortOfficerList(juniors);
-        List[] returning = {seniors,juniors};
-        return returning;
-    }
-
-    private void sortOfficerList(List<Officer> list){
-        int n = list.size();
-        for (int i = 1; i < n; ++i) {
-            Officer key = list.get(i);
-            int j = i - 1;
-
-            /* Move elements of arr[0..i-1], that are
-               greater than key, to one position ahead
-               of their current position */
-            while (j >= 0 && list.get(j).getQualityScore() < key.getQualityScore()) {
-                list.set(j + 1,  list.get(j));
-                j = j - 1;
-            }
-            list.set(j + 1, key);
-        }
-    }
-
 }

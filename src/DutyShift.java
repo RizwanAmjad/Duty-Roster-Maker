@@ -15,11 +15,10 @@ public class DutyShift {
     private Officer[] tiger2 = new Officer[2];
     private Officer[] tiger3 = new Officer[2];
     private Officer[] tiger4 = new Officer[2];
-
     private Officer weightStationNorth;
     private Officer weightStationSouth;
-
     private Officer shaheen;
+
     private Officer wirelessOperator;
     private Officer security;
     private Officer moherer;
@@ -92,48 +91,63 @@ public class DutyShift {
         return weightStationNorth;
     }
 
-    public void setWeightStationNorth(Officer weightStationNorth) {
-        this.weightStationNorth = weightStationNorth;
+    public void setWeightStationNorth(Officer weightStationNorth) throws DutyFullException {
+        if (this.weightStationNorth == null)
+            this.weightStationNorth = weightStationNorth;
+        else throw new DutyFullException("Duty Full");
     }
 
     public Officer getWeightStationSouth() {
         return weightStationSouth;
     }
 
-    public void setWeightStationSouth(Officer weightStationSouth) {
-        this.weightStationSouth = weightStationSouth;
+    public void setWeightStationSouth(Officer weightStationSouth) throws DutyFullException {
+        if(this.weightStationSouth == null)
+            this.weightStationSouth = weightStationSouth;
+        else throw new DutyFullException("Duty Full");
     }
 
     public Officer getShaheen() {
         return shaheen;
     }
 
-    public void setShaheen(Officer shaheen) {
-        this.shaheen = shaheen;
+    public void setShaheen(Officer shaheen) throws DutyFullException {
+
+        if (this.shaheen == null)
+            this.shaheen = shaheen;
+        else throw new DutyFullException("Duty Full");
     }
 
     public Officer getWirelessOperator() {
         return wirelessOperator;
     }
 
-    public void setWirelessOperator(Officer wirelessOperator) {
-        this.wirelessOperator = wirelessOperator;
+    public void setWirelessOperator(Officer wirelessOperator) throws DutyFullException {
+
+        if (this.wirelessOperator==null)
+            this.wirelessOperator = wirelessOperator;
+        else throw new DutyFullException("Duty Full");
     }
 
     public Officer getSecurity() {
         return security;
     }
 
-    public void setSecurity(Officer security) {
-        this.security = security;
+    public void setSecurity(Officer security) throws DutyFullException {
+
+        if (this.security == null)
+            this.security = security;
+        else throw new DutyFullException("Duty Full");
     }
 
     public Officer getMoherer() {
         return moherer;
     }
 
-    public void setMoherer(Officer moherer) {
-        this.moherer = moherer;
+    public void setMoherer(Officer moherer) throws DutyFullException {
+        if (this.moherer == null)
+            this.moherer = moherer;
+        else throw new DutyFullException("Duty Full");
     }
 
     @Override

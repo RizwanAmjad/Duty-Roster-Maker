@@ -39,14 +39,30 @@ public class DutyRoster {
         this.nightShift = nightShift;
     }
 
+    public void addToRotation(Officer officer){
+        onRotation.add(officer);
+    }
+
+    public List<Officer> getOnRotation() {
+        return onRotation;
+    }
+
+    public void addToAssigned(Officer officer){
+        assigned.add(officer);
+    }
+
+    public List<Officer> getAssigned(){
+        return assigned;
+    }
+
     @Override
     public String toString() {
         return "DutyRoster{" +
                 "morningShift=" + morningShift +
-                ", eveningShift=" + eveningShift +
-                ", nightShift=" + nightShift +
-                ", onRotation=" + onRotation +
-                ", assigned=" + assigned +
+                ", \neveningShift=" + eveningShift +
+                ", \nnightShift=" + nightShift +
+                ", \nonRotation=" + onRotation +
+                ", \nassigned=" + assigned +
                 '}';
     }
 }
