@@ -7,7 +7,7 @@ public class DutyRoster {
     private DutyShift nightShift;
 
     private List<Officer> onRotation = new ArrayList<>();
-    private List<Officer> assigned = new ArrayList<>();
+    private List<Assigned> assigned = new ArrayList<>();
 
     public DutyRoster() {
         morningShift = new DutyShift();
@@ -47,11 +47,11 @@ public class DutyRoster {
         return onRotation;
     }
 
-    public void addToAssigned(Officer officer){
-        assigned.add(officer);
+    public void addToAssigned(Officer officer, Shifts shift, Duty duty){
+        assigned.add(new Assigned(officer, shift, duty));
     }
 
-    public List<Officer> getAssigned(){
+    public List<Assigned> getAssigned(){
         return assigned;
     }
 

@@ -111,9 +111,8 @@ public class DutyShift {
         return shaheen;
     }
 
-    public void setShaheen(Officer shaheen) throws DutyFullException {
-
-        if (this.shaheen == null)
+    public void setShaheen(Officer shaheen, Shifts shift) throws DutyFullException {
+        if (this.shaheen == null && shift == Shifts.Morning)
             this.shaheen = shaheen;
         else throw new DutyFullException("Duty Full");
     }

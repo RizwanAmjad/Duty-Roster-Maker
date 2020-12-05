@@ -5,7 +5,7 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args){
         List<Officer> officers = new ArrayList<>();
-        for(int i=0; i<35; i++){
+        for(int i=0; i<33; i++){
             Shifts shiftPreference = Shifts.values()[new Random().nextInt(3)];
             OfficerType officerType = OfficerType.Senior;
             // generate random number between low and high
@@ -27,7 +27,7 @@ public class Main {
                     new Random().nextInt(100)
             ));
         }
-        for(int i=0; i<12; i++){
+        for(int i=0; i<11; i++){
             Shifts shiftPreference = Shifts.values()[new Random().nextInt(3)];
             OfficerType officerType = OfficerType.Junior;
             // generate random number between low and high
@@ -58,8 +58,18 @@ public class Main {
         RosterCreator rosterCreator = new RosterCreator(officers);
         DutyRoster dutyRoster = rosterCreator.generateRoster();
         System.out.println(dutyRoster);
-        System.out.println("On Rotation" + dutyRoster.getOnRotation());
+        //System.out.println("On Rotation" + dutyRoster.getOnRotation());
         System.out.println(dutyRoster.getAssigned().size());
 
+        for (int i=0; i<dutyRoster.getAssigned().size(); i++) {
+            Assigned officer = dutyRoster.getAssigned().get(i);
+            for (int j=0; j<dutyRoster.getAssigned().size(); j++) {
+                Assigned off = dutyRoster.getAssigned().get(j);
+                if(officer.getOfficer().equals(off.getOfficer()) && i!=j){
+                    System.out.println(officer);
+                }
+            }
+        }
     }
+
 }
